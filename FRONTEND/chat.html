@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 720px;
+            margin: 40px auto;
+            padding: 32px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 0 0 24px 0;
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 90px;
+            padding: 14px 100px 14px 14px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 0.95em;
+            box-sizing: border-box;
+            background-color: #ffffff;
+            color: #212529;
+            transition: border-color 0.15s ease-in-out;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #228be6;
+        }
+
+        button {
+            position: absolute;
+            right: 10px;
+            bottom: 12px;
+            background-color: #228be6;
+            color: #ffffff;
+            padding: 8px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9em;
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #1c7ed6;
+        }
+
+        .status {
+            font-style: normal;
+            color: #868e96;
+            margin: 4px 0 20px 0;
+            font-size: 0.85em;
+            min-height: 18px;
+        }
+
+        .chat-history {
+            margin-top: 10px;
+            max-height: 450px;
+            overflow-y: auto;
+            padding-right: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .chat-entry {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .message-bubble {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            word-wrap: break-word;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .chat-entry .you-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .chat-entry .you {
+            background-color: #228be6;
+            color: #ffffff;
+        }
+
+        .chat-entry .bot-container {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .chat-entry .bot {
+            background-color: #f1f3f5;
+            color: #212529;
+            white-space: pre-wrap;
+            border: 1px solid #e9ecef;
+        }
+
+        .sender-label {
+            font-size: 0.75em;
+            margin-bottom: 4px;
+            font-weight: 600;
+            opacity: 0.8;
+        }
+
+        .footer {
+            margin-top: 32px;
+            padding-top: 20px;
+            border-top: 1px solid #f1f3f5;
+            display: flex;
+            justify-content: center;
+        }
+
+        .logout-button {
+            background-color: #f8f9fa;
+            color: #fa5252;
+            border: 1px solid #ffc9c9;
+            padding: 8px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85em;
+            font-weight: 500;
+            transition: all 0.15s ease-in-out;
+        }
+
+        .logout-button:hover {
+            background-color: #ffe3e3;
+            color: #e03131;
+        }
+    </style>
+    <script>
+        function showThinking() {
+            document.getElementById('status').innerText = 'Thinking...';
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome, {{ username }}!</h2>
+        <form method="post" action="/chat" onsubmit="showThinking()">
+            <div class="input-group">
+                <textarea name="query" placeholder="Ask your question here..." required></textarea>
+                <button type="submit">Ask</button>
+            </div>
+        </form>
+        <p id="status" class="status">{{ status }}</p>
+        <div class="chat-history">
+            {% for entry in history %}
+                <div class="chat-entry">
+                    <div class="you-container">
+                        <div class="message-bubble you">
+                            <div class="sender-label">You</div>
+                            {{ entry.query }}
+                        </div>
+                    </div>
+                    <div class="bot-container">
+                        <div class="message-bubble bot">
+                            <div class="sender-label">Bot</div>
+                            {{ entry.response }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="footer">
+            <a href="/logout" class="logout-button">Log out</a>
+        </div>
+    </div>
+</body>
+</html>
